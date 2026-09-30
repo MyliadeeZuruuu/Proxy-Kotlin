@@ -4,21 +4,72 @@
   --kotlin-purple: #7F52FF;
   --kotlin-orange: #FF6D00;
   --kotlin-yellow: #FFD700;
-  --kotlin-bg: #FFF3E0; 
+  --kotlin-bg: #FFF3E0;
 }
 
 body {
   background-color: var(--kotlin-bg);
-  background-image: radial-gradient(#000 1px, transparent 1px);
-  background-size: 20px 20px;
+  /* Grid pattern bergaya blueprint/komputer */
+  background-image: 
+    linear-gradient(#00000010 1px, transparent 1px),
+    linear-gradient(90deg, #00000010 1px, transparent 1px);
+  background-size: 30px 30px;
   background-position: 0 0;
   color: #000;
+  font-family: var(--font-space), sans-serif;
 }
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Animasi marquee */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-
 .animate-marquee {
   animation: marquee 20s linear infinite;
+}
+
+/* Blinking cursor */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Efek scanline tipis (opsional, bikin terasa CRT) */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.animate-scan {
+  animation: scan 6s linear infinite;
+}
+
+/* =========================================
+   TAMBAHAN BARU: ANIMASI ORBIT
+   ========================================= */
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-counter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.animate-orbit-spin {
+  /* 25s artinya 1 putaran penuh memakan waktu 25 detik */
+  animation: orbit-spin 25s linear infinite;
+}
+
+.animate-orbit-counter {
+  /* Kartu berputar ke arah berlawanan agar tetap tegak lurus menghadap layar */
+  animation: orbit-counter 25s linear infinite;
 }

@@ -22,8 +22,9 @@ export default function OrbitCarousel({ dataAnggota }) {
           const x = radius * Math.cos(radian);
           const y = radius * Math.sin(radian);
 
-          // Perhitungan skala dan z-index berdasarkan posisi Y
-          const normalizedY = (y + radius) / (2 * radius);
+          // PERBAIKAN: Bulatkan normalizedY menjadi 5 angka di belakang koma
+          const normalizedY = Number(((y + radius) / (2 * radius)).toFixed(5));
+          
           const scale = 0.4 + normalizedY * 0.6;
           const zIndex = Math.round(normalizedY * 100);
           const opacity = 0.3 + normalizedY * 0.7;
@@ -38,7 +39,6 @@ export default function OrbitCarousel({ dataAnggota }) {
                 opacity: opacity.toFixed(2),
                 pointerEvents: pointerEvents,
               }}
-              // Tambahkan animate-orbit-counter agar kartu tidak ikut miring saat container berputar
               className="absolute animate-orbit-counter"
             >
               <CardAnggota data={anggota} />
