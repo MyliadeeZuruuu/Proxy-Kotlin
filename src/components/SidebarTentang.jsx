@@ -1,14 +1,49 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronDown, ChevronRight, Users, Image as ImageIcon } from 'lucide-react';
 import { anggotaData } from '@/data/anggota';
 import { dokumentasiData } from '@/data/dokumentasi';
 
+// Helper: shuffle array dengan algoritma Fisher-Yates
+function shuffleArray(arr) {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Helper: susun daftar anggota — pin 091 di atas, sisanya random
+function buildDaftarAnggota() {
+  const PINNED_ID = "091";
+  const pinned = anggotaData.find((a) => a.id === PINNED_ID);
+  const others = anggotaData.filter((a) => a.id !== PINNED_ID);
+  const shuffledOthers = shuffleArray(others);
+  return pinned ? [pinned, ...shuffledOthers] : shuffledOthers;
+}
+
+// Helper: urutan default tanpa shuffle (untuk render pertama / SSR)
+function buildDefaultAnggota() {
+  const PINNED_ID = "091";
+  const pinned = anggotaData.find((a) => a.id === PINNED_ID);
+  const others = anggotaData.filter((a) => a.id !== PINNED_ID);
+  return pinned ? [pinned, ...others] : others;
+}
+
 export default function SidebarTentang() {
   const [menuOpen, setMenuOpen] = useState(true);
   const [anggotaOpen, setAnggotaOpen] = useState(true);
   const [dokumentasiOpen, setDokumentasiOpen] = useState(true);
+
+  // Pakai urutan default dulu (sama di server & client)
+  const [daftarAnggota, setDaftarAnggota] = useState(buildDefaultAnggota);
+
+  // Setelah mounted di browser, baru shuffle
+  useEffect(() => {
+    setDaftarAnggota(buildDaftarAnggota());
+  }, []);
 
   return (
     <div className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full h-full flex flex-col">
@@ -52,7 +87,7 @@ export default function SidebarTentang() {
 
             {anggotaOpen && (
               <div className="flex flex-col max-h-[220px] overflow-y-auto bg-white">
-                {anggotaData.map((a) => (
+                {daftarAnggota.map((a) => (
                   <Link
                     key={a.id}
                     href={`/anggota/${a.id}`}
